@@ -39,7 +39,8 @@ class SklearnEstimator(nn.Module, Registrable):
         # which is expected. The input tensors shouldn't require gradients.
 
         if (self.training or self.fit_on_test) and y is not None:
-            if partial_fit_func := getattr(self.estimator, "partial_fit", None):
+            partial_fit_func = getattr(self.estimator, "partial_fit", None)
+            if partial_fit_func:
                 partial_fit_func(X, y)
             elif self._already_fit and not (self.fit_on_test and not self.training):
                 raise AlreadyFittedError(
